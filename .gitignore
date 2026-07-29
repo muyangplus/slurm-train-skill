@@ -1,0 +1,44 @@
+# Local cluster configuration and credentials
+config/cluster*.json
+!config/cluster.example.json
+config/*.local.json
+.env
+*.env
+*.key
+*.pem
+
+# Local state and rendered job files
+.slurm-autosync/
+rendered/
+
+# Training artifacts
+runs/
+logs/
+models/
+*.pt
+*.pth
+*.ckpt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Editor / tool state
+.claude/
+rendered/
+
+# Training artifacts
+runs/
+logs/
+models/
+*.pt
+*.pth
+*.ckpt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/

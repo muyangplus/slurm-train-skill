@@ -1,0 +1,4 @@
+epoch,metrics/mAP50(B),metrics/mAP50-95(B),metrics/precision(B),metrics/recall(B)
+0,0.50,0.30,0.55,0.40
+1,0.68,0.42,0.64,0.58
+2,0.72,0.48,0.70,0.65

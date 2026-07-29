@@ -1,0 +1,10 @@
+{
+  "profile": "yolo",
+  "config_path": "datasets/custom.yaml",
+  "root": "datasets",
+  "train_images": "train/images",
+  "train_labels": "train/labels",
+  "val_images": "val/images",
+  "val_labels": "val/labels",
+  "require_label_pairing": true
+}

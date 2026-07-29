@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "name": "batch-sweep",
+  "mode": "parallel",
+  "inputs": {
+    "data": "datasets/custom.yaml",
+    "model": "weights/model.pt"
+  },
+  "output_dir": "runs/batch-sweep",
+  "resources": {
+    "cpus_per_task": 8,
+    "gpus_per_task": 1,
+    "time_limit": "24:00:00"
+  },
+  "train_command": [
+    "yolo", "train", "data={data}", "model={model}", "epochs={epochs}",
+    "batch={batch}", "workers=4", "project={trial_output_parent}",
+    "name={trial_name}", "exist_ok=True"
+  ],
+  "trials": [
+    {"name": "batch-16", "args": {"epochs": 100, "batch": 16}},
+    {"name": "batch-32", "args": {"epochs": 100, "batch": 32}}
+  ],
+  "artifacts": ["results.csv", "results.png", "weights/best.pt", "weights/last.pt"]
+}

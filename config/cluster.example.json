@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "connection": {
+    "host": "login.example.org",
+    "user": "your-user",
+    "port": 22,
+    "identity_file": null
+  },
+  "remote": {
+    "workspace": "/home/your-user/training-workspace",
+    "source_dir": "src",
+    "data_dir": "datasets",
+    "weights_dir": "weights",
+    "runs_dir": "runs",
+    "logs_dir": "logs",
+    "staging_dir": ".slurm-autosync/staging"
+  },
+  "slurm": {
+    "partition": "gpu",
+    "account": null,
+    "qos": null,
+    "time_limit": "24:00:00",
+    "cpus_per_task": 8,
+    "gpus_per_task": 1,
+    "memory": null,
+    "module_loads": [],
+    "conda_init": "",
+    "conda_env": "training-env"
+  },
+  "policy": {
+    "compute_nodes_have_internet": false,
+    "allow_remote_delete": false,
+    "sync_excludes": [".git", ".venv", "__pycache__", "runs", "logs", "*.pt", "*.pth"]
+  }
+}
