@@ -27,18 +27,3 @@ __pycache__/
 
 # Editor / tool state
 .claude/
-rendered/
-
-# Training artifacts
-runs/
-logs/
-models/
-*.pt
-*.pth
-*.ckpt
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-.pytest_cache/
