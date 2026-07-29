@@ -1,5 +1,5 @@
 [project]
-name = "slurm-autosync"
+name = "slurm-train-skill"
 version = "1.0.0"
 description = "Portable, configuration-driven SLURM training workflow skill"
 requires-python = ">=3.11"

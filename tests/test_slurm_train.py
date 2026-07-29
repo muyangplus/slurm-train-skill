@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULE_PATH = ROOT / "scripts" / "slurm_autosync.py"
-spec = importlib.util.spec_from_file_location("slurm_autosync", MODULE_PATH)
+MODULE_PATH = ROOT / "scripts" / "slurm_train.py"
+spec = importlib.util.spec_from_file_location("slurm_train", MODULE_PATH)
 module = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)

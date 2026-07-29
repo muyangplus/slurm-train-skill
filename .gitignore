@@ -8,7 +8,7 @@ config/*.local.json
 *.pem
 
 # Local state and rendered job files
-.slurm-autosync/
+.slurm-train/
 rendered/
 
 # Training artifacts

@@ -1,9 +1,9 @@
 ---
-name: slurm-autosync
+name: slurm-train-skill
 description: Configure, validate, synchronize, submit, monitor, retrieve, and analyze training jobs on generic SLURM GPU clusters. Use for SLURM training, sbatch scripts, GPU job queues, cluster sync, result retrieval, and training metrics.
 ---
 
-# SLURM AutoSync
+# SLURM Train Skill
 
 Use this Skill to operate a training workflow across three execution boundaries:
 
@@ -17,11 +17,11 @@ Never assume a compute node can access the internet. By default, compute-node ne
 
 1. Copy `config/cluster.example.json` to a local `config/cluster.json`; do not commit it.
 2. Copy an experiment example, fill in framework-specific command arrays and paths, and keep all remote paths relative to the configured workspace.
-3. Run `python scripts/slurm_autosync.py --cluster config/cluster.json --dry-run doctor` first. Remove `--dry-run` only after the printed SSH command is correct.
+3. Run `python scripts/slurm_train.py --cluster config/cluster.json --dry-run doctor` first. Remove `--dry-run` only after the printed SSH command is correct.
 4. Render and review a script before submission:
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json render --experiment config/experiment.single.example.json --output rendered/baseline.slurm
+python scripts/slurm_train.py --cluster config/cluster.json render --experiment config/experiment.single.example.json --output rendered/baseline.slurm
 ```
 
 ## Routing

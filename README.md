@@ -17,7 +17,7 @@
 ```text
 SKILL.md                         Claude Code Skill 入口
 config/                          可复制 JSON 配置样例
-scripts/slurm_autosync.py        本地编排 CLI，仅使用 Python 标准库
+scripts/slurm_train.py        本地编排 CLI，仅使用 Python 标准库
 templates/                       通用 SLURM 模板
 tests/                           离线 unittest 测试
 ```
@@ -38,35 +38,35 @@ Copy-Item config/experiment.single.example.json config/experiment.local.json
 4. 先打印诊断命令并确认无误，再执行真实连接诊断。
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json --dry-run doctor
-python scripts/slurm_autosync.py --cluster config/cluster.json doctor
+python scripts/slurm_train.py --cluster config/cluster.json --dry-run doctor
+python scripts/slurm_train.py --cluster config/cluster.json doctor
 ```
 
 5. 渲染并审核单卡脚本。
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json render --experiment config/experiment.local.json --output rendered/baseline.slurm
+python scripts/slurm_train.py --cluster config/cluster.json render --experiment config/experiment.local.json --output rendered/baseline.slurm
 ```
 
 6. 同步源代码，上传并提交已审核的脚本。
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json sync --source .
-python scripts/slurm_autosync.py --cluster config/cluster.json submit --script rendered/baseline.slurm
+python scripts/slurm_train.py --cluster config/cluster.json sync --source .
+python scripts/slurm_train.py --cluster config/cluster.json submit --script rendered/baseline.slurm
 ```
 
 7. 使用返回的 job ID 查看状态或取消作业。
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json status 12345
-python scripts/slurm_autosync.py --cluster config/cluster.json cancel 12345
+python scripts/slurm_train.py --cluster config/cluster.json status 12345
+python scripts/slurm_train.py --cluster config/cluster.json cancel 12345
 ```
 
 8. 拉取结果并分析 CSV。
 
 ```powershell
-python scripts/slurm_autosync.py --cluster config/cluster.json fetch --remote-path runs/baseline-single --destination .\runs
-python scripts/slurm_autosync.py analyze .\runs\baseline-single\results.csv --output .\runs\baseline-summary.json
+python scripts/slurm_train.py --cluster config/cluster.json fetch --remote-path runs/baseline-single --destination .\runs
+python scripts/slurm_train.py analyze .\runs\baseline-single\results.csv --output .\runs\baseline-summary.json
 ```
 
 ## 配置
@@ -100,7 +100,7 @@ trial 参数可在命令中以 `{batch}`、`{epochs}` 等占位符使用。
 YOLO 数据集可使用示例 profile 离线检查目录和标签配对：
 
 ```powershell
-python scripts/slurm_autosync.py check-dataset --dataset . --profile config/dataset.yolo.example.json
+python scripts/slurm_train.py check-dataset --dataset . --profile config/dataset.yolo.example.json
 ```
 
 它检查 train/val 的图片与标签目录，以及每张图片是否存在同名 `.txt` 标签。远端数据集应在登录节点以相同规则检查，并确保数据配置引用集群上的绝对路径。
@@ -131,16 +131,16 @@ python scripts/slurm_autosync.py check-dataset --dataset . --profile config/data
 ## 命令参考
 
 ```text
-python scripts/slurm_autosync.py --help
-python scripts/slurm_autosync.py --cluster config/cluster.json doctor
-python scripts/slurm_autosync.py --cluster config/cluster.json sync --source PATH
-python scripts/slurm_autosync.py --cluster config/cluster.json render --experiment PATH [--output PATH]
-python scripts/slurm_autosync.py --cluster config/cluster.json submit --script PATH
-python scripts/slurm_autosync.py --cluster config/cluster.json status JOB_ID
-python scripts/slurm_autosync.py --cluster config/cluster.json cancel JOB_ID
-python scripts/slurm_autosync.py --cluster config/cluster.json fetch --remote-path PATH --destination PATH
-python scripts/slurm_autosync.py check-dataset --dataset PATH --profile PATH
-python scripts/slurm_autosync.py analyze RESULT.csv [MORE.csv ...] [--output REPORT.json]
+python scripts/slurm_train.py --help
+python scripts/slurm_train.py --cluster config/cluster.json doctor
+python scripts/slurm_train.py --cluster config/cluster.json sync --source PATH
+python scripts/slurm_train.py --cluster config/cluster.json render --experiment PATH [--output PATH]
+python scripts/slurm_train.py --cluster config/cluster.json submit --script PATH
+python scripts/slurm_train.py --cluster config/cluster.json status JOB_ID
+python scripts/slurm_train.py --cluster config/cluster.json cancel JOB_ID
+python scripts/slurm_train.py --cluster config/cluster.json fetch --remote-path PATH --destination PATH
+python scripts/slurm_train.py check-dataset --dataset PATH --profile PATH
+python scripts/slurm_train.py analyze RESULT.csv [MORE.csv ...] [--output REPORT.json]
 ```
 
 ## 安全

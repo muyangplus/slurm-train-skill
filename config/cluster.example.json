@@ -13,7 +13,7 @@
     "weights_dir": "weights",
     "runs_dir": "runs",
     "logs_dir": "logs",
-    "staging_dir": ".slurm-autosync/staging"
+    "staging_dir": ".slurm-train/staging"
   },
   "slurm": {
     "partition": "gpu",
