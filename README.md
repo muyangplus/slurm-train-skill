@@ -1,4 +1,4 @@
-# SLURM AutoSync
+# SLURM Train Skill
 
 面向任意 SLURM GPU 集群的训练工作流 Skill。它把本地项目、登录节点和计算节点的职责明确分开，提供配置校验、脚本渲染、代码同步、作业提交、监控、结果回收和 CSV 指标分析。
 
@@ -24,7 +24,7 @@ tests/                           离线 unittest 测试
 
 ## 快速开始
 
-1. 建立私有集群配置。`config/cluster.json` 已被 `.gitignore` 排除。
+1. 建立私有集群配置。
 
 ```powershell
 Copy-Item config/cluster.example.json config/cluster.json
