@@ -58,13 +58,13 @@ After EVERY `submit`, you MUST immediately begin automatic monitoring. Do NOT ju
 ### Monitoring Protocol
 
 1. **Submit** the job and record the job ID.
-2. **Poll immediately**: run `status JOB_ID` every 30 seconds for the first 5 minutes, then every 2 minutes thereafter.
+2. **Poll interval**: run `status JOB_ID` **every 1 minute** during the critical window (first 5 minutes or until the first epoch/iteration completes, whichever is longer). After the first epoch completes successfully, relax to **every 5 minutes**.
 3. **Watch for state transitions**:
    - `PENDING` → note the `Reason` field (Priority, Resources, Partition, AssocGrp*). Report to user if queued > 2 min.
    - `RUNNING` → immediately check `.out` and `.err` logs on the login node for the first lines.
    - `COMPLETED` → proceed to completion verification (below).
    - `FAILED` / `CANCELLED` / `TIMEOUT` → proceed to failure analysis (below).
-4. **First-iteration gate (critical window: first 5 minutes)**: Once the job enters RUNNING, tail the `.out` log. You MUST confirm that the first training iteration/epoch has started and completed without error. Most configuration bugs, OOMs, and import errors surface here. If the job dies before the first iteration finishes, it is a **fast-fail** — proceed immediately to failure analysis.
+4. **First-iteration gate (critical window)**: Once the job enters RUNNING, tail the `.out` log. You MUST confirm that the first training iteration/epoch has started and completed without error. Most configuration bugs, OOMs, and import errors surface here. Keep the 1-minute poll interval until the first epoch finishes. If the job dies before the first iteration finishes, it is a **fast-fail** — proceed immediately to failure analysis.
 5. **Do NOT assume success from Slurm state alone.** A job can reach `COMPLETED` with exit code 0 while the training itself crashed silently.
 
 ### Job States and Meanings
