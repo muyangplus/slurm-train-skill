@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "name": "r2fm-ar2l-combo-large",
+  "mode": "single",
+  "inputs": {
+    "data": "datasets/merged_obb/data.yaml",
+    "model": "weights/yolo11n-obb.pt"
+  },
+  "output_dir": "runs/r2fm-ar2l-combo",
+  "resources": {
+    "cpus_per_task": 8,
+    "gpus_per_task": 2,
+    "time_limit": "24:00:00",
+    "memory": "32G"
+  },
+  "train_command": [
+    "python", "-c",
+    "from ultralytics import YOLO; import json, os; model = YOLO('{model}'); results = model.train(data='{data}', epochs=100, batch=32, imgsz=640, device='0,1', workers=8, project='{output_parent}', name='train', exist_ok=True, patience=20, save=True, save_period=10, val=True); rd = results.results_dict; metrics = {{'mAP50': float(rd.get('metrics/mAP50(B)', 0)), 'mAP50_95': float(rd.get('metrics/mAP50-95(B)', 0))}}; os.makedirs('{output_parent}/results', exist_ok=True); json.dump(metrics, open('{output_parent}/results/{name}.json', 'w'), indent=2); print(json.dumps(metrics, indent=2))"
+  ]
+}
