@@ -187,6 +187,7 @@ ssh <host> "cat <workspace>/logs/<job-name>-<jobid>.err"
 #SBATCH --job-name=<NAME>
 #SBATCH --partition=<PARTITION>
 #SBATCH --gres=gpu:<N>
+#SBATCH --gres-flags=enforce-binding
 #SBATCH --cpus-per-task=<CPU>
 #SBATCH --mem=<MEM>
 #SBATCH --time=<TIME>
@@ -226,5 +227,6 @@ print(json.dumps(metrics, indent=2))
 - Validate experiment names against `[A-Za-z0-9][A-Za-z0-9._-]*`; use a unique output directory for every trial.
 - Treat `--delete-remote` as destructive. It is disabled unless the cluster policy permits it and requires `--confirm` with the exact remote path.
 - Do not request multiple GPUs for a single-process workload. Parallel sweeps use independent single-GPU tasks and Slurm-controlled GPU visibility.
+- Multi-GPU jobs MUST use `#SBATCH --gres-flags=enforce-binding` to guarantee exclusive GPU access and prevent other tasks from sharing the allocated GPUs.
 
 See `README.md` for the complete setup and workflow reference.

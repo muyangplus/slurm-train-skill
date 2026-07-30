@@ -51,6 +51,7 @@ class RenderingTests(unittest.TestCase):
         rendered = module.render_job(ROOT, self.cluster, experiment)
         self.assertIn("set -euo pipefail", rendered)
         self.assertIn("Required file missing", rendered)
+        self.assertIn("--gres-flags=enforce-binding", rendered)
         self.assertNotIn("{{", rendered)
         self.assertNotIn("wget", rendered)
 
@@ -59,8 +60,9 @@ class RenderingTests(unittest.TestCase):
             json.loads((ROOT / "config" / "experiment.parallel.example.json").read_text(encoding="utf-8")), self.cluster
         )
         rendered = module.render_job(ROOT, self.cluster, experiment)
-        self.assertIn("#SBATCH --ntasks=2", rendered)
-        self.assertIn("--gpus-per-task=1", rendered)
+        self.assertIn("#SBATCH --ntasks=4", rendered)
+        self.assertIn("--gpus-per-task=2", rendered)
+        self.assertIn("--gres-flags=enforce-binding", rendered)
         self.assertNotIn("DEVICE=$SLURM_PROCID", rendered)
         self.assertNotIn("device=$SLURM_PROCID", rendered)
 

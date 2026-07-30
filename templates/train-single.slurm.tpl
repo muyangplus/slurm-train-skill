@@ -5,6 +5,7 @@
 #SBATCH --cpus-per-task={{CPUS_PER_TASK}}
 #SBATCH --gpus-per-task={{GPUS_PER_TASK}}
 #SBATCH --gres=gpu:{{GPUS_PER_TASK}}
+#SBATCH --gres-flags=enforce-binding
 #SBATCH --partition={{PARTITION}}
 #SBATCH --time={{TIME_LIMIT}}
 #SBATCH --output={{LOG_DIR}}/%x-%j.out

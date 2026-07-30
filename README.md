@@ -115,6 +115,7 @@ python scripts/slurm_train.py check-dataset --dataset . --profile config/dataset
 - 不在计算节点执行 `pip`、`conda install`、`wget`、`curl` 或 `git clone`。
 - 使用 `%x-%j` 或 `%x-%j-%t` 命名日志。
 - 并行任务使用 `srun --exclusive --gpus-per-task`。
+- 多 GPU 作业包含 `#SBATCH --gres-flags=enforce-binding` 确保 GPU 独占。 
 
 依赖安装、模型下载和大规模数据准备应在登录节点完成，且最好由项目自己的环境管理脚本负责。
 
