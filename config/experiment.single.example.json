@@ -1,20 +1,21 @@
 {
   "schema_version": 1,
-  "name": "baseline-single",
+  "name": "baseline-2gpu",
   "mode": "single",
   "inputs": {
     "data": "datasets/custom.yaml",
     "model": "weights/model.pt"
   },
-  "output_dir": "runs/baseline-single",
+  "output_dir": "runs/baseline-2gpu",
   "resources": {
     "cpus_per_task": 8,
-    "gpus_per_task": 1,
-    "time_limit": "24:00:00"
+    "gpus_per_task": 2,
+    "time_limit": "24:00:00",
+    "memory": "32G"
   },
   "train_command": [
     "yolo", "train", "data={data}", "model={model}", "epochs=100",
-    "batch=16", "imgsz=640", "workers=4", "project={output_parent}",
+    "batch=32", "imgsz=640", "workers=8", "project={output_parent}",
     "name={name}", "exist_ok=True"
   ],
   "validation_command": [

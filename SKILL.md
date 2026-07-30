@@ -16,7 +16,7 @@ Never assume a compute node can access the internet. By default, compute-node ne
 ## First Use
 
 1. Read the user's cluster config (hardware specs, partition, paths, conda env, network status).
-2. Optimize resource allocation: CPU per job = total_cores / gpu_count. For a 32-core 8-GPU cluster, 1-GPU jobs use 4 cores and 16GB RAM.
+2. Optimize resource allocation: CPU per job = total_cores / gpu_count. For a 32-core 8-GPU cluster, 2-GPU jobs use 8 cores and 32GB RAM.
 3. If compute nodes are offline, pre-download all model weights locally and SCP them to the cluster `weights/` directory before submitting any job.
 4. Copy `config/cluster.example.json` to a local `config/cluster.json`; do not commit it.
 5. Copy an experiment example, fill in framework-specific command arrays and paths, and keep all remote paths relative to the configured workspace.
@@ -33,7 +33,7 @@ Scale job resources based on the cluster's total hardware:
 | medium | 2 | 8 | 32G | 4 |
 | large | 4 | 16 | 64G | 2 |
 
-For YOLO OBB training: 1 GPU + batch 16 is sufficient for most experiments. Use 2 GPU + batch 32 for final long-training runs.
+For YOLO OBB training: 2 GPU + batch 32 is the recommended default for optimal throughput (~40% faster wall time than 1 GPU). Use 1 GPU + batch 16 for quick ablation experiments.
 
 ## Routing
 
@@ -42,7 +42,7 @@ For YOLO OBB training: 1 GPU + batch 16 is sufficient for most experiments. Use 
 | Configure or diagnose access | Use `doctor`. |
 | Upload code or configuration | Use `sync`. |
 | Prepare environment, data, or weights | Pre-download weights locally → SCP to cluster. Do NOT put downloads in job scripts. |
-| Run one GPU job | Render a `mode: single` experiment, review it, then use `submit`. |
+| Run a training job | Render a `mode: single` experiment, review it, then use `submit`. |
 | Run independent GPU trials | Render a `mode: parallel` experiment with unique `trials`; one task and one GPU per trial. |
 | Validate a trained model | Use an experiment `validation_command` after the best-model path is verified. |
 | Inspect, cancel, or read logs | Use `status` or `cancel`. |
@@ -86,7 +86,7 @@ from ultralytics import YOLO
 model = YOLO('<WEIGHT_PATH>')
 results = model.train(
     data='<DATA_YAML>', epochs=<N>, batch=<N>, imgsz=640,
-    device=0, workers=<CPU>, project='<PROJECT>', name='train',
+    device='0,1', workers=<CPU>, project='<PROJECT>', name='train',
     exist_ok=True, patience=20, save=True, save_period=10, val=True,
 )
 rd = results.results_dict

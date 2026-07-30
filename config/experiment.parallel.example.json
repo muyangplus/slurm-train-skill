@@ -8,14 +8,14 @@
   },
   "output_dir": "runs/obb-ablation",
   "resources": {
-    "cpus_per_task": 4,
-    "gpus_per_task": 1,
+    "cpus_per_task": 8,
+    "gpus_per_task": 2,
     "time_limit": "24:00:00",
-    "memory": "16G"
+    "memory": "32G"
   },
   "train_command": [
     "python", "-c",
-    "from ultralytics import YOLO; import json, os; model = YOLO('{model}'); results = model.train(data='{data}', epochs={epochs}, batch={batch}, imgsz=640, device=0, workers=4, project='{output_parent}', name='{trial_name}', exist_ok=True, patience=20, save=True, save_period=10, val=True); rd = results.results_dict; metrics = {{'name': '{trial_name}', 'epochs': {epochs}, 'batch': {batch}, 'mAP50': float(rd.get('metrics/mAP50(B)', 0)), 'mAP50_95': float(rd.get('metrics/mAP50-95(B)', 0))}}; os.makedirs('{output_parent}/results', exist_ok=True); json.dump(metrics, open('{output_parent}/results/{trial_name}.json', 'w'), indent=2); print(json.dumps(metrics, indent=2))"
+    "from ultralytics import YOLO; import json, os; model = YOLO('{model}'); results = model.train(data='{data}', epochs={epochs}, batch={batch}, imgsz=640, device=0, workers=8, project='{output_parent}', name='{trial_name}', exist_ok=True, patience=20, save=True, save_period=10, val=True); rd = results.results_dict; metrics = {{'name': '{trial_name}', 'epochs': {epochs}, 'batch': {batch}, 'mAP50': float(rd.get('metrics/mAP50(B)', 0)), 'mAP50_95': float(rd.get('metrics/mAP50-95(B)', 0))}}; os.makedirs('{output_parent}/results', exist_ok=True); json.dump(metrics, open('{output_parent}/results/{trial_name}.json', 'w'), indent=2); print(json.dumps(metrics, indent=2))"
   ],
   "trials": [
     {"name": "baseline",     "args": {"epochs": "100", "batch": "16"}},

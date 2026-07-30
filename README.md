@@ -17,7 +17,7 @@
 ```text
 SKILL.md                         Claude Code Skill 入口
 config/                          可复制 JSON 配置样例
-scripts/slurm_train.py        本地编排 CLI，仅使用 Python 标准库
+scripts/slurm_train.py           本地编排 CLI，仅使用 Python 标准库
 templates/                       通用 SLURM 模板
 tests/                           离线 unittest 测试
 ```
@@ -42,7 +42,7 @@ python scripts/slurm_train.py --cluster config/cluster.json --dry-run doctor
 python scripts/slurm_train.py --cluster config/cluster.json doctor
 ```
 
-5. 渲染并审核单卡脚本。
+5. 渲染并审核训练脚本。
 
 ```powershell
 python scripts/slurm_train.py --cluster config/cluster.json render --experiment config/experiment.local.json --output rendered/baseline.slurm
@@ -65,8 +65,8 @@ python scripts/slurm_train.py --cluster config/cluster.json cancel 12345
 8. 拉取结果并分析 CSV。
 
 ```powershell
-python scripts/slurm_train.py --cluster config/cluster.json fetch --remote-path runs/baseline-single --destination .\runs
-python scripts/slurm_train.py analyze .\runs\baseline-single\results.csv --output .\runs\baseline-summary.json
+python scripts/slurm_train.py --cluster config/cluster.json fetch --remote-path runs/baseline-2gpu --destination .\runs
+python scripts/slurm_train.py analyze .\runs\baseline-2gpu\results.csv --output .\runs\baseline-summary.json
 ```
 
 ## 配置
@@ -85,9 +85,9 @@ python scripts/slurm_train.py analyze .\runs\baseline-single\results.csv --outpu
 
 所有 `remote` 子路径必须是相对 POSIX 路径，`remote.workspace` 必须是绝对 POSIX 路径。实验名和 trial 名仅允许字母、数字、点、下划线和连字符。
 
-### 单卡实验
+### 训练实验
 
-`mode: single` 为一个 Slurm 任务配置一个或多个 GPU。对于单进程训练，通常设为一张 GPU。命令参数支持 `{data}`、`{model}`、`{name}`、`{output_dir}`、`{output_parent}` 和 `{best_model}` 占位符。
+`mode: single` 为一个 Slurm 任务配置一个或多个 GPU。推荐使用 2 GPU + batch 32 获得最佳训练吞吐（~280 img/s）。命令参数支持 `{data}`、`{model}`、`{name}`、`{output_dir}`、`{output_parent}` 和 `{best_model}` 占位符。
 
 ### 并行实验矩阵
 
