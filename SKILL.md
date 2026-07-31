@@ -79,6 +79,36 @@ After EVERY `submit`, you MUST immediately begin automatic monitoring. Do NOT ju
 | `CANCELLED` | Manually cancelled or by admin | Confirm intent; re-submit if needed |
 | `NODE_FAIL` | Compute node crashed | Re-submit; report to admin if repeated |
 
+### Cross-Experiment Comparison (对照实验监控)
+
+When running multiple experiments in parallel (ablation studies, hyperparameter sweeps, A/B comparisons), you MUST compare metrics across experiments at the same epoch to validate that modifications are taking effect.
+
+**Why this matters**: If all trials produce identical metrics at epoch 5, the variable you changed (batch size, learning rate, architecture) had no impact — or the code didn't actually pick up the change. Conversely, if a trial diverges wildly from its peers at epoch 2, something is wrong with that specific configuration.
+
+**Comparison protocol** (run at each 5-minute poll after all jobs pass the first-epoch gate):
+
+1. **Fetch current metrics** for each experiment — read the latest row from each `results.csv` via SSH.
+2. **Align by epoch** — compare metrics only for epochs that all experiments have completed.
+3. **Check for expected divergence**:
+   - If the experiments are meant to differ (e.g., different batch sizes), metrics SHOULD diverge. If they stay identical past epoch 3, flag it — the variable may not be wired correctly.
+   - If the experiments are identical seeds (reproducibility check), metrics MUST be near-identical. A deviation > 1% warrants investigation.
+4. **Detect anomalies**:
+   - A trial whose loss is 2x the group average at the same epoch → likely bug or bad hyperparameter.
+   - A trial whose mAP is flat while others are climbing → training may be stuck; check `.err` log.
+   - A trial whose metrics exactly match another trial → possible config collision (same output dir, same name).
+
+**During the early-epoch window (epochs 1–5)**: report a quick comparison summary after each poll. Example:
+
+```text
+Epoch 3/100 — cross-trial comparison:
+  baseline      mAP50=0.42  loss=2.31
+  r2fm          mAP50=0.45  loss=2.18  (+7% vs baseline)
+  ar2l          mAP50=0.41  loss=2.33  (≈ baseline, change may not be effective)
+  r2fm-ar2l     mAP50=0.48  loss=2.05  (+14% vs baseline)
+```
+
+If any trial's metrics are unexpectedly identical to baseline past epoch 5, or if a trial is clearly broken (loss=NaN, mAP=0), treat it as a failure for that specific trial — analyze its logs and consider cancelling + re-submitting with a fix.
+
 ## Real Completion vs Fake Completion (假完成)
 
 **Slurm `COMPLETED` does NOT mean the training succeeded.** It only means the shell process exited with code 0. This distinction is critical.
