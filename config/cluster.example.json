@@ -22,7 +22,7 @@
     "time_limit": "24:00:00",
     "cpus_per_task": 8,
     "gpus_per_task": 2,
-    "memory": "32G",
+    "memory": "128G",
     "module_loads": [],
     "conda_init": "",
     "conda_env": "training-env"

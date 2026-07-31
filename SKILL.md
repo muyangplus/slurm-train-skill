@@ -16,7 +16,7 @@ Never assume a compute node can access the internet. By default, compute-node ne
 ## First Use
 
 1. Read the user's cluster config (hardware specs, partition, paths, conda env, network status).
-2. Optimize resource allocation: CPU per job = total_cores / gpu_count. For a 32-core 8-GPU cluster, 2-GPU jobs use 8 cores and 32GB RAM.
+2. Optimize resource allocation: CPU per job = total_cores / gpu_count, RAM per job = total_ram / gpu_count. For a 32-core 8×5090 512GB cluster, 2-GPU jobs use 8 cores and 128GB RAM.
 3. If compute nodes are offline, pre-download all model weights locally and SCP them to the cluster `weights/` directory before submitting any job.
 4. Copy `config/cluster.example.json` to a local `config/cluster.json`; do not commit it.
 5. Copy an experiment example, fill in framework-specific command arrays and paths, and keep all remote paths relative to the configured workspace.
@@ -25,15 +25,18 @@ Never assume a compute node can access the internet. By default, compute-node ne
 
 ## Resource Allocation
 
-Scale job resources based on the cluster's total hardware:
+Scale job resources based on the cluster's total hardware. For a 32-core 8×5090 512GB node:
 
-| Job Type | GPU | CPU | RAM | Max Concurrent (8-GPU 32-core) |
-|----------|-----|-----|-----|-------------------------------|
-| small | 1 | 4 | 16G | 8 |
-| medium | 2 | 8 | 32G | 4 |
-| large | 4 | 16 | 64G | 2 |
+| Job Type | GPU | CPU | RAM | Max Concurrent |
+|----------|-----|-----|-----|----------------|
+| small | 1 | 4 | 64G | 8 |
+| medium | 2 | 8 | 128G | 4 |
+| large | 4 | 16 | 256G | 2 |
+| full | 8 | 32 | 512G | 1 |
 
-For YOLO OBB training: 2 GPU + batch 32 is the recommended default for optimal throughput (~40% faster wall time than 1 GPU). Use 1 GPU + batch 16 for quick ablation experiments.
+RTX 5090 has 32 GB VRAM per GPU. This removes VRAM as the primary constraint for most vision workloads — batch size is now bounded by training time rather than memory. Always enable mixed precision (FP16/BF16) to maximize throughput.
+
+For YOLO OBB training: 2 GPU + batch 64 is the recommended default for optimal throughput. With 32 GB VRAM per GPU, batch 32–128 is feasible depending on image size. Use 1 GPU + batch 32 for quick ablation experiments.
 
 ## Routing
 
