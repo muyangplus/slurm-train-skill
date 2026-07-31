@@ -11,7 +11,7 @@
     "cpus_per_task": 8,
     "gpus_per_task": 2,
     "time_limit": "24:00:00",
-    "memory": "128G"
+    "memory": "120G"
   },
   "train_command": [
     "yolo", "train", "data={data}", "model={model}", "epochs=100",
